@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define NUM_CAM 0
+#define NUM_CAM 1
 
 #define TOLERANCE_COLOR 25
 #define TOLERANCE_MOUVEMENT 20
@@ -310,6 +310,27 @@ void showCentroid(CvPoint centroidColor, CvPoint centroidMouvement, const char* 
 
     cvDrawCircle(centroidImage, centroidColor, 10, CV_RGB(255, 0, 0), -1);
     cvDrawCircle(centroidImage, centroidMouvement, 10, CV_RGB(0, 0, 255), -1);
+    
+    //add drawing of all states
+    for(int i = 0; i < 640; i = i+128){
+        for(int j = 0; j < 480; j = j+96){
+            CvPoint topLeft = cvPoint(i, j);
+            CvPoint buttomRight = cvPoint(i+128, j+96);
+            cvRectangle(centroidImage, topLeft, buttomRight, CV_RGB(0, 255, 0), 1);
+        }
+    }
+
+    //add drawing of the state with the centroidColor in red
+    for(int i = 0; i < 640; i = i+128){
+        for(int j = 0; j < 480; j = j+96){
+            CvPoint topLeft = cvPoint(i, j);
+            CvPoint buttomRight = cvPoint(i+128, j+96);
+            if(centroidColor.x > i && centroidColor.x < i+128 && centroidColor.y > j && centroidColor.y < j+96)
+                cvRectangle(centroidImage, topLeft, buttomRight, CV_RGB(255, 0, 0), 2);    
+        }
+    }
+
+
     cvShowImage(window, centroidImage);
 
     cvReleaseImage(&centroidImage);
